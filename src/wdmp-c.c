@@ -50,7 +50,7 @@
 void wdmp_parse_generic_request(char * payload, PAYLOAD_TYPE payload_type, req_struct **reqObj)
 {
     cJSON *request = NULL;
-    char *out = NULL, *command = NULL;
+    char *command = NULL;
 
     if (!payload || !reqObj)
     {
@@ -70,8 +70,6 @@ void wdmp_parse_generic_request(char * payload, PAYLOAD_TYPE payload_type, req_s
 	
         if (command != NULL)
         {
-            out = cJSON_PrintUnformatted(request);
-
             //allocate structure according to payload type
             if (payload_type == WDMP_TR181 || payload_type == WDMP_SNMP)
             {
@@ -89,7 +87,7 @@ void wdmp_parse_generic_request(char * payload, PAYLOAD_TYPE payload_type, req_s
 
             if ((strcmp(command, "GET") == 0) || (strcmp(command, "GET_ATTRIBUTES") == 0))
             {
-                WdmpInfo("Request %s\n", out);
+                WdmpInfo("GET request\n");
                 parse_get_request(request, reqObj, payload_type);
             }
             else if ((strcmp(command, "SET") == 0))
@@ -119,7 +117,7 @@ void wdmp_parse_generic_request(char * payload, PAYLOAD_TYPE payload_type, req_s
             }
             else if (strcmp(command, "DELETE_ROW") == 0)
             {
-                WdmpInfo("DELETE_ROW Request: %s\n", out);
+                WdmpInfo("DELETE_ROW Request\n");
                 parse_delete_row_request(request, reqObj);
             }
             else
@@ -127,11 +125,6 @@ void wdmp_parse_generic_request(char * payload, PAYLOAD_TYPE payload_type, req_s
                 WdmpError("Unknown Command \n");
                 wdmp_free_req_struct(*reqObj);
                 (*reqObj) = NULL;
-            }
-
-            if (out != NULL)
-            {
-                cJSON_free(out);
             }
         }
 
