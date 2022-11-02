@@ -71,6 +71,8 @@ void wdmp_parse_generic_request(char * payload, PAYLOAD_TYPE payload_type, req_s
         if (command != NULL)
         {
             out = cJSON_PrintUnformatted(request);
+	    int unfor_len = strlen(out);
+	    printf("unfor_len is %d\n",unfor_len); 
 
             //allocate structure according to payload type
             if (payload_type == WDMP_TR181 || payload_type == WDMP_SNMP)
@@ -91,6 +93,8 @@ void wdmp_parse_generic_request(char * payload, PAYLOAD_TYPE payload_type, req_s
             {
                 WdmpInfo("Request %s\n", out);
                 parse_get_request(request, reqObj, payload_type);
+		int get_len =strlen(out);
+		printf("get_len length is %d\n",get_len);
             }
             else if ((strcmp(command, "SET") == 0))
             {
@@ -131,6 +135,9 @@ void wdmp_parse_generic_request(char * payload, PAYLOAD_TYPE payload_type, req_s
 
             if (out != NULL)
             {
+		int get_len_free =strlen(out);
+                printf("get_len_free length is %d\n",get_len_free);
+
                 cJSON_free(out);
             }
         }
